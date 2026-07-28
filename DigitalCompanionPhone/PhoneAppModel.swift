@@ -209,11 +209,15 @@ final class PhoneAppModel {
 
     // MARK: - 设置更新
 
-    /// 用户 Persona 变更 → 持久化 + 重启当前角色对话
+    /// 用户 Persona 变更 → 持久化；昵称/描述变化才重启对话，单独换头像不打断聊天。
     func updateUserPersona(_ newValue: UserPersona) {
         guard newValue != userPersona else { return }
+        let shouldRestartConversation =
+            newValue.name != userPersona.name
+            || newValue.description != userPersona.description
         userPersona = newValue
         UserPersonaStore.save(newValue)
+        guard shouldRestartConversation else { return }
         guard let persona = currentPersona else { return }
         Task { @MainActor in
             await chatService.activate(

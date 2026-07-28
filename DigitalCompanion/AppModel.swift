@@ -494,11 +494,15 @@ class AppModel {
         }
     }
 
-    /// 更新用户 Persona：持久化 + 强制重启当前角色对话（换名字后角色该重新"认识"你）
+    /// 更新用户 Persona：持久化；昵称/描述变化才重启对话，单独换头像不打断聊天。
     func updateUserPersona(_ newValue: UserPersona) {
         guard newValue != userPersona else { return }
+        let shouldRestartConversation =
+            newValue.name != userPersona.name
+            || newValue.description != userPersona.description
         userPersona = newValue
         UserPersonaStore.save(newValue)
+        guard shouldRestartConversation else { return }
         if let persona = currentPersona {
             performanceService.stop()
             expressionService.stop()

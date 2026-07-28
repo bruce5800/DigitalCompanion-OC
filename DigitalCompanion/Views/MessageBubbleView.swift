@@ -70,7 +70,10 @@ struct MessageBubbleView: View {
     private var avatarKind: ChatAvatarView.Kind {
         switch message.role {
         case .user:
-            return .user(name: appModel.userPersona.name)
+            return .user(
+                name: appModel.userPersona.name,
+                avatarID: AvatarRegistry.resolvedUserAvatarID(appModel.userPersona.avatarID)
+            )
         case .assistant:
             if let persona = appModel.currentPersona {
                 return .character(name: persona.name, id: persona.id)
@@ -89,7 +92,7 @@ struct MessageBubbleView: View {
 struct ChatAvatarView: View {
 
     enum Kind {
-        case user(name: String)
+        case user(name: String, avatarID: String)
         case character(name: String, id: String)
     }
 
@@ -120,7 +123,7 @@ struct ChatAvatarView: View {
 
     private var avatarID: String {
         switch kind {
-        case .user:                    return AvatarRegistry.userAvatarID
+        case .user(_, let avatarID):   return avatarID
         case .character(_, let id):    return id
         }
     }
@@ -135,7 +138,7 @@ struct ChatAvatarView: View {
     private var initial: String {
         let name: String
         switch kind {
-        case .user(let n):           name = n
+        case .user(let n, _):        name = n
         case .character(let n, _):   name = n
         }
         return String(name.prefix(1))

@@ -16,10 +16,28 @@ struct UserPersonaEditor: View {
 
     @State private var name: String = ""
     @State private var description: String = ""
+    @State private var avatarID: String = AvatarRegistry.userAvatarID
+
+    private let avatarColumns = [
+        GridItem(.adaptive(minimum: 68), spacing: 12)
+    ]
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    LazyVGrid(columns: avatarColumns, spacing: 12) {
+                        ForEach(Array(AvatarRegistry.userAvatarIDs.enumerated()), id: \.element) { index, id in
+                            avatarOption(id: id, index: index)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("选择头像")
+                } footer: {
+                    Text("头像均为原创生成，不使用现有 IP 角色素材。")
+                }
+
                 Section {
                     TextField("昵称", text: $name)
                         .textInputAutocapitalization(.never)
@@ -53,18 +71,52 @@ struct UserPersonaEditor: View {
             .onAppear {
                 name = appModel.userPersona.name
                 description = appModel.userPersona.description
+                avatarID = AvatarRegistry.resolvedUserAvatarID(appModel.userPersona.avatarID)
             }
         }
     }
 
     private var hasChanges: Bool {
-        name != appModel.userPersona.name || description != appModel.userPersona.description
+        name != appModel.userPersona.name
+            || description != appModel.userPersona.description
+            || avatarID != AvatarRegistry.resolvedUserAvatarID(appModel.userPersona.avatarID)
+    }
+
+    @ViewBuilder
+    private func avatarOption(id: String, index: Int) -> some View {
+        Button {
+            avatarID = id
+        } label: {
+            if let url = AvatarRegistry.fileURL(for: id),
+               let image = UIImage(contentsOfFile: url.path) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 68, height: 68)
+                    .clipShape(Circle())
+                    .overlay {
+                        Circle()
+                            .stroke(avatarID == id ? Color.accentColor : .clear, lineWidth: 4)
+                    }
+                    .overlay(alignment: .bottomTrailing) {
+                        if avatarID == id {
+                            Image(systemName: "checkmark.circle.fill")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.white, Color.accentColor)
+                        }
+                    }
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("用户头像 \(index + 1)")
+        .accessibilityAddTraits(avatarID == id ? .isSelected : [])
     }
 
     private func save() {
         let newValue = UserPersona(
             name: name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "旅行者" : name,
-            description: description
+            description: description,
+            avatarID: avatarID
         )
         appModel.updateUserPersona(newValue)
         dismiss()
