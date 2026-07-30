@@ -1,2 +1,12 @@
 .DS_Store
-DigitalCompanion.xcodeproj/xcuserdata
+
+# Xcode 用户态：每台机器/每个人各不相同，入库只会制造冲突
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# Swift Package Manager
+.build/
+.swiftpm/
+.gitignore
