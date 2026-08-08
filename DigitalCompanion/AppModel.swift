@@ -131,13 +131,38 @@ class AppModel {
 
     init() {
         // 选存储后端（iCloud 优先，不可用自动降级 local）
+        #if DEBUG
+        let (storage, backend) = ScreenshotDemoData.isEnabled
+            ? ScreenshotDemoData.makeStorage()
+            : StorageFactory.makeDefault()
+        #else
         let (storage, backend) = StorageFactory.makeDefault()
+        #endif
         self.storage = storage
         self.storageBackend = backend
         self.chatService = ChatService(storage: storage)
 
         self.behavior = BehaviorOrchestrator(appModel: self)
+        #if DEBUG
+        if ScreenshotDemoData.isEnabled {
+            userPersona = ScreenshotDemoData.userPersona
+            currentPersona = CharacterPersona.load(named: "oc")
+            Task { @MainActor in
+                await ScreenshotDemoData.install(into: storage)
+                if let persona = currentPersona {
+                    await chatService.activate(
+                        persona: persona,
+                        userPersona: userPersona,
+                        freshStart: false
+                    )
+                }
+            }
+        } else {
+            switchCharacter(to: "oc")
+        }
+        #else
         switchCharacter(to: "oc")
+        #endif
         ttsService.lipSyncService = lipSyncService
 
         // 表演(唱歌):歌曲带 sidecar 口型曲线时,播放期间驱动嘴形
@@ -572,7 +597,10 @@ class AppModel {
 
     /// 检查当前服务商是否已配置 API Key
     var isAPIKeyConfigured: Bool {
-        KeychainService.load(forAccount: selectedProvider.keychainAccount) != nil
+        #if DEBUG
+        if ScreenshotDemoData.isEnabled { return true }
+        #endif
+        return KeychainService.load(forAccount: selectedProvider.keychainAccount) != nil
     }
 
     // MARK: - A2 情境感知

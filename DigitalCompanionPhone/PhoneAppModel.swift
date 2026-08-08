@@ -52,11 +52,36 @@ final class PhoneAppModel {
     // MARK: - 初始化
 
     init() {
+        #if DEBUG
+        let (storage, backend) = ScreenshotDemoData.isEnabled
+            ? ScreenshotDemoData.makeStorage()
+            : StorageFactory.makeDefault()
+        #else
         let (storage, backend) = StorageFactory.makeDefault()
+        #endif
         self.storage = storage
         self.storageBackend = backend
         self.chatService = ChatService(storage: storage)
+        #if DEBUG
+        if ScreenshotDemoData.isEnabled {
+            userPersona = ScreenshotDemoData.userPersona
+            currentPersona = CharacterPersona.load(named: "oc")
+            Task { @MainActor in
+                await ScreenshotDemoData.install(into: storage)
+                if let persona = currentPersona {
+                    await chatService.activate(
+                        persona: persona,
+                        userPersona: userPersona,
+                        freshStart: false
+                    )
+                }
+            }
+        } else {
+            switchCharacter(to: "oc")
+        }
+        #else
         switchCharacter(to: "oc")
+        #endif
 
         // A4：启动主动触发心跳
         startTriggerLoop()
@@ -243,7 +268,10 @@ final class PhoneAppModel {
     // MARK: - 派生状态
 
     var isAPIKeyConfigured: Bool {
-        KeychainService.load(forAccount: selectedProvider.keychainAccount) != nil
+        #if DEBUG
+        if ScreenshotDemoData.isEnabled { return true }
+        #endif
+        return KeychainService.load(forAccount: selectedProvider.keychainAccount) != nil
     }
 
     /// 当前角色显示名
