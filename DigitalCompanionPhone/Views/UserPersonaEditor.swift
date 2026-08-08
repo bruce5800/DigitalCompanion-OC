@@ -56,7 +56,7 @@ struct UserPersonaEditor: View {
                     Text("几句话介绍你自己 —— 职业、爱好、最近在做什么。会作为「关于用户」注入到系统提示里。")
                 }
             }
-            .navigationTitle("用户 Persona")
+            .navigationTitle("关于我")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

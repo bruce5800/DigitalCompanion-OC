@@ -70,9 +70,7 @@ struct PersonaMemoryDetailScreen: View {
                             .font(.callout)
                     }
                 } header: {
-                    Text("最新一轮 LLM 建议回复")
-                } footer: {
-                    Text("验证 suggestions 正确持久化 + 观察 LLM 生成质量。")
+                    Text("建议回复")
                 }
             }
 
@@ -159,9 +157,9 @@ struct PersonaMemoryDetailScreen: View {
                     .foregroundStyle(.secondary)
             }
         } header: {
-            Text("Facts")
+            Text("关于你")
         } footer: {
-            Text("反思服务自动抽取。点一条编辑、左滑删除。")
+            Text("伙伴会在相处中慢慢了解你。点一条可编辑，左滑可删除。")
         }
     }
 
@@ -215,9 +213,9 @@ struct PersonaMemoryDetailScreen: View {
                     .foregroundStyle(.secondary)
             }
         } header: {
-            Text("Episodes")
+            Text("共同经历")
         } footer: {
-            Text("对话时间线上的记忆段落。最新的在上，左滑删除。")
+            Text("你们一起经历过的片段，最新的在上。")
         }
     }
 

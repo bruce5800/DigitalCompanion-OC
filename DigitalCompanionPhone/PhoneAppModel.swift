@@ -65,7 +65,7 @@ final class PhoneAppModel {
         #if DEBUG
         if ScreenshotDemoData.isEnabled {
             userPersona = ScreenshotDemoData.userPersona
-            currentPersona = CharacterPersona.load(named: "oc")
+            currentPersona = CharacterPersona.load(named: ScreenshotDemoData.personaID ?? "oc")
             Task { @MainActor in
                 await ScreenshotDemoData.install(into: storage)
                 if let persona = currentPersona {

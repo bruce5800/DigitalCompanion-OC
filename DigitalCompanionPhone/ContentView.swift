@@ -16,6 +16,23 @@ struct ContentView: View {
     var body: some View {
         @Bindable var appModel = appModel
 
+        #if DEBUG
+        if ScreenshotDemoData.isEnabled, ScreenshotDemoData.route == "profile" {
+            UserPersonaEditor()
+        } else if ScreenshotDemoData.isEnabled, ScreenshotDemoData.route == "memory" {
+            ScreenshotMemoryDetailRoot()
+        } else {
+            standardContent(appModel: appModel)
+        }
+        #else
+        standardContent(appModel: appModel)
+        #endif
+    }
+
+    @ViewBuilder
+    private func standardContent(appModel: PhoneAppModel) -> some View {
+        @Bindable var appModel = appModel
+
         NavigationStack {
             ChatScreen()
                 .navigationTitle("")
@@ -46,6 +63,35 @@ struct ContentView: View {
         }
     }
 }
+
+#if DEBUG
+private struct ScreenshotMemoryDetailRoot: View {
+    @Environment(PhoneAppModel.self) private var appModel
+    @State private var snapshot: ChatSnapshot?
+
+    var body: some View {
+        NavigationStack {
+            if let snapshot {
+                PersonaMemoryDetailScreen(snapshot: snapshot)
+            } else {
+                ProgressView("正在准备伙伴记忆…")
+                    .task { await loadSnapshot() }
+            }
+        }
+    }
+
+    private func loadSnapshot() async {
+        let personaID = ScreenshotDemoData.personaID ?? "oc"
+        for _ in 0..<20 {
+            if let loaded = try? await appModel.storage.loadChatSnapshot(personaID: personaID) {
+                snapshot = loaded
+                return
+            }
+            try? await Task.sleep(for: .milliseconds(100))
+        }
+    }
+}
+#endif
 
 #Preview {
     ContentView()

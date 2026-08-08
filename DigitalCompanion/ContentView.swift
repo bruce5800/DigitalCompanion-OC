@@ -14,9 +14,11 @@ struct ContentView: View {
 
     @Environment(AppModel.self) private var appModel
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.openImmersiveSpace) private var openImmersiveSpace
 
     @State private var showUserPersonaEdit = false
     @State private var showGestureGuide = false
+    @State private var didOpenScreenshotRoute = false
     /// 首次进入沉浸空间是否已弹过手势引导（持久化；以后加手势可升 v 号重弹）
     @AppStorage("hasSeenGestureGuide_v1") private var hasSeenGestureGuide = false
 
@@ -107,7 +109,7 @@ struct ContentView: View {
             ChatView()
 
             // 场景扫描调试行（仅 immersive 开启时显示）
-            if appModel.immersiveSpaceState == .open {
+            if appModel.immersiveSpaceState == .open && shouldShowSceneDebugBar {
                 SceneDebugBar()
                     .padding(.horizontal)
                     .padding(.top, 4)
@@ -198,6 +200,35 @@ struct ContentView: View {
                 appModel.showAPIKeySetup = true
             }
         }
+        #if DEBUG
+        .task {
+            guard ScreenshotDemoData.isEnabled, !didOpenScreenshotRoute else { return }
+            didOpenScreenshotRoute = true
+            switch ScreenshotDemoData.route {
+            case "immersive":
+                hasSeenGestureGuide = true
+                showGestureGuide = false
+                try? await Task.sleep(for: .seconds(1))
+                appModel.immersiveSpaceState = .inTransition
+                if case .error = await openImmersiveSpace(id: appModel.immersiveSpaceID) {
+                    appModel.immersiveSpaceState = .closed
+                }
+            case "avatar-studio":
+                try? await Task.sleep(for: .seconds(1))
+                openWindow(id: "avatarStudio")
+            default:
+                break
+            }
+        }
+        #endif
+    }
+
+    private var shouldShowSceneDebugBar: Bool {
+        #if DEBUG
+        return !ScreenshotDemoData.isEnabled
+        #else
+        return true
+        #endif
     }
 }
 

@@ -146,7 +146,8 @@ class AppModel {
         #if DEBUG
         if ScreenshotDemoData.isEnabled {
             userPersona = ScreenshotDemoData.userPersona
-            currentPersona = CharacterPersona.load(named: "oc")
+            currentPersona = CharacterPersona.load(named: ScreenshotDemoData.personaID ?? "oc")
+            selectedAnimation = currentPersona?.animations.first?.fileName ?? ""
             Task { @MainActor in
                 await ScreenshotDemoData.install(into: storage)
                 if let persona = currentPersona {
