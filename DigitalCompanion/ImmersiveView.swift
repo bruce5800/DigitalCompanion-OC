@@ -53,7 +53,13 @@ struct ImmersiveView: View {
             // 创建根锚点
             let anchor = Entity()
             anchor.name = "characterAnchor"
+            #if DEBUG
+            // 截图演示：人物站在聊天窗右侧，避免遮住对话内容。
+            let screenshotLayout = ScreenshotDemoData.isEnabled && ScreenshotDemoData.route == "immersive"
+            anchor.position = SIMD3<Float>(screenshotLayout ? 0.85 : 0, 0, -2.0)
+            #else
             anchor.position = SIMD3<Float>(0, 0, -2.0)
+            #endif
             content.add(anchor)
 
             // 场景可视化的 overlay 根（Phase 2 调试专用）
