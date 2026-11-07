@@ -75,10 +75,6 @@ struct GestureGuideView: View {
                 }
             }
 
-            Text("手势识别需在真机沉浸空间里使用（模拟器不支持）。")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .padding(.top, 16)
         }
         .padding(26)
         .frame(maxWidth: 540)

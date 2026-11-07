@@ -2,7 +2,7 @@
 //  AvatarStudioModel.swift
 //  DigitalCompanion
 //
-//  捏人间的状态模型:加载底模 USDZ → 建 AvatarComposer → 中转 UI 编辑 →
+//  角色工坊的状态模型:加载底模 USDZ → 建 AvatarComposer → 中转 UI 编辑 →
 //  存/取 AvatarRecipe(走 CompanionStorage,和 chat/memory 同轨同步)。
 //
 //  开发期底模:avatar_base_dev.usdz(spike 产物,双发型 + 2 捏脸 morph)。
@@ -57,7 +57,7 @@ final class AvatarStudioModel {
     /// 所有 UI 读取走这份镜像,每次 composer 操作后同步。
     private(set) var recipeMirror: AvatarRecipe = .default
 
-    /// 底模的 idle 动画。捏人间必须播动画:裙类部件在 VRoid 里是
+    /// 底模的 idle 动画。角色工坊必须播动画:裙类部件在 VRoid 里是
     /// 下摆外张着建模的(靠运行时弹簧垂落),我们的物理烘在动画里,
     /// bind pose 直接看是"翘起来"的。
     private var idleAnimation: AnimationResource?
@@ -74,7 +74,7 @@ final class AvatarStudioModel {
     /// 保存反馈(nil = 无提示)
     private(set) var saveFeedback: String?
 
-    // MARK: - 人设(和外观一起在捏人间编辑)
+    // MARK: - 人设(和外观一起在角色工坊编辑)
 
     /// 角色名字(空 → 保存时落默认名)
     var personaName: String = ""

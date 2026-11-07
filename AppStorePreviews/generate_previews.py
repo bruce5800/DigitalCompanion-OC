@@ -113,6 +113,9 @@ def main():
         ("02-immersive-oc-raw.png", "02-companion-oc.png", "她不只在屏幕里", "原创角色来到你面前，陪伴更有存在感。"),
         ("03-immersive-sg-raw.png", "03-companion-sg.png", "不同性格，\n都能来到你身边", "选择此刻最适合你的陪伴。"),
         ("04-immersive-xo-raw.png", "04-companion-xo.png", "在熟悉的房间，\n自然地聊一会儿", "空间计算，让陪伴成为生活的一部分。"),
+        ("05-gesture-guide-raw.png", "05-gesture-interaction.png", "挥挥手，\n她就会回应", "握拳说话、挥手招呼，用手势自然互动。"),
+        ("06-avatar-studio-raw.png", "06-character-workshop.png", "在角色工坊，\n设计她的样子", "发型、服饰、发色与声线，由你选择。"),
+        ("07-movement-mode-raw.png", "07-movement-modes.png", "静止、跟随、\n自主切换", "选择此刻适合的角色行动方式。"),
     ]
     for spec in vision_specs:
         compose_vision(*spec)

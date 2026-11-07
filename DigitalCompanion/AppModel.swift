@@ -93,7 +93,7 @@ class AppModel {
     private static let builtinPersonaIDs = ["oc", "sg", "xo"]
 
     /// 全部可选角色 ID = 内置 + 用户自定义(捏人系统)。
-    /// 计算属性:自定义角色在捏人间保存后,切换菜单下次打开即出现。
+    /// 计算属性:自定义角色在角色工坊保存后,切换菜单下次打开即出现。
     var availablePersonaIDs: [String] {
         Self.builtinPersonaIDs + CustomPersonaStore.loadAll().map(\.id)
     }
@@ -443,7 +443,7 @@ class AppModel {
     /// 当前角色是自定义角色时,把保存的外观配方(部件/捏脸/发色)应用到
     /// 刚加载的实体上。发生在 ImmersiveView attach + setupLipSync **之前**,
     /// 所以口型订阅拿到的是重建后的 mesh,索引不会作废。
-    /// 注意:作用于 clone(不动缓存模板);捏人间改完配方保存时会 clearModelCache,
+    /// 注意:作用于 clone(不动缓存模板);角色工坊改完配方保存时会 clearModelCache,
     /// 但即便不清,这里每次 attach 都重新读配方,结果也是新的。
     private func applyAvatarRecipeIfCustom(to entity: Entity) async {
         guard let persona = currentPersona,

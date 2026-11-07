@@ -37,8 +37,12 @@
 | 炉边 | `../zh-Hans/VisionPro/02-companion-oc.png` | 3840×2160 |
 | 炉边 | `../zh-Hans/VisionPro/03-companion-sg.png` | 3840×2160 |
 | 炉边 | `../zh-Hans/VisionPro/04-companion-xo.png` | 3840×2160 |
+| 炉边 | `../zh-Hans/VisionPro/05-gesture-interaction.png` | 3840×2160 |
+| 炉边 | `../zh-Hans/VisionPro/06-character-workshop.png` | 3840×2160 |
+| 炉边 | `../zh-Hans/VisionPro/07-movement-modes.png` | 3840×2160 |
 
 以上是简体中文本地化素材，上传最终合成图，不上传 `*-raw.png`。App Store Connect 每个设备尺寸可上传 1–10 张；按实际页面提示选择槽位。尺寸标准：[Apple Screenshot Specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications)。
+手势图展示的是模拟器中的操作引导页，不是模拟器成功识别手势的画面；手势识别须在 Vision Pro 真机验证。移动模式图展示“跟随”已选中的界面，动态跟随效果同样须在真机确认。
 
 ## 上架前待办
 

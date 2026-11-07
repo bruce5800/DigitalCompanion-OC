@@ -2,7 +2,7 @@
 //  AvatarStudioView.swift
 //  DigitalCompanion
 //
-//  捏人间(volumetric 窗口):角色模型立在中间,控制面板作为
+//  角色工坊(volumetric 窗口):角色模型立在中间,控制面板作为
 //  RealityView attachment 飘在右侧 —— visionOS 原生的"对着 3D 模型捏"。
 //
 //  面板三区:发型(单选)/ 捏脸(滑杆)/ 发色(预设 + 自选)。
@@ -23,8 +23,8 @@ struct AvatarStudioView: View {
     @State private var showDeleteConfirm = false
 
     /// 角色在音量窗里的摆位(窗原点在几何中心;模型 ~1.5m 高)
-    private static let characterScale: Float = 0.8
-    private static let characterY: Float = -0.62
+    private static let characterScale: Float = 0.57
+    private static let characterY: Float = -0.55
 
     var body: some View {
         RealityView { content, attachments in
@@ -61,6 +61,18 @@ struct AvatarStudioView: View {
                 }
             }
             await model.load(storage: appModel.storage)
+            #if DEBUG
+            if ScreenshotDemoData.isEnabled,
+               ScreenshotDemoData.route == "avatar-studio",
+               case .ready = model.state {
+                if let hair = model.hairGroups.first(where: { $0.id == "hair2" }) {
+                    model.selectPart(hair.id)
+                }
+                if let outfit = model.outfitGroups.first(where: { $0.id == "outfit2" }) {
+                    model.selectPart(outfit.id)
+                }
+            }
+            #endif
         }
     }
 
@@ -70,7 +82,7 @@ struct AvatarStudioView: View {
     private var controlPanel: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                Text("捏人间")
+                Text("角色工坊")
                     .font(.title3)
                     .fontWeight(.bold)
                 Spacer()

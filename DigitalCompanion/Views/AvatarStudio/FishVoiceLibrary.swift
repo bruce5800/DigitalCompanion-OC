@@ -3,7 +3,7 @@
 //  DigitalCompanion
 //
 //  Fish Audio 音色库:app 内维护的一份 JSON(FishVoiceLibrary.json),
-//  每条 = 一个 Fish reference ID + 元信息,捏人间"声线"页据此
+//  每条 = 一个 Fish reference ID + 元信息,角色工坊"声线"页据此
 //  自动推荐 / 手选。库为空时 UI 退化为手填 ID。
 //
 //  FishVoiceLibrary.json 格式(直接编辑该文件补充音色):

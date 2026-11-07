@@ -21,7 +21,7 @@ struct DigitalCompanionApp: App {
         .windowStyle(.plain)
         .defaultSize(width: 600, height: 800)
 
-        // 捏人间:volumetric 窗,模型立在中间、控制面板 attachment 飘在旁边
+        // 角色工坊:volumetric 窗,模型立在中间、控制面板 attachment 飘在旁边
         WindowGroup(id: "avatarStudio") {
             AvatarStudioView()
                 .environment(appModel)

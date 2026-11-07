@@ -2,7 +2,7 @@
 //  CustomPersonaFactory.swift
 //  DigitalCompanion
 //
-//  把捏人间里用户填的"名字 + 性格"合成一份完整的 CharacterPersona。
+//  把角色工坊里用户填的"名字 + 性格"合成一份完整的 CharacterPersona。
 //  动画映射固定指向 custom_* 资产(捏人底模过管线产出的 12 个动画,
 //  与内置角色同一套 Mixamo 动作,所以映射表直接镜像 oc.json)。
 //
@@ -16,7 +16,7 @@
 import Foundation
 import CompanionCore
 
-/// 捏人间声线页的选择结果(nil = 不设置/保留原值)
+/// 角色工坊声线页的选择结果(nil = 不设置/保留原值)
 struct VoiceSelection {
     var applePreset: String? = nil
     var fishVoiceID: String? = nil
@@ -24,7 +24,7 @@ struct VoiceSelection {
 
 enum CustomPersonaFactory {
 
-    /// 用 AI 生成的完整角色卡构造(捏人间"AI 完善人设"路径)。
+    /// 用 AI 生成的完整角色卡构造(角色工坊"AI 完善人设"路径)。
     /// - Parameter personality: 用户在输入框里最终确认的性格文本
     ///   (可能在生成后又手改过,以输入框为准,覆盖卡内值)
     static func make(

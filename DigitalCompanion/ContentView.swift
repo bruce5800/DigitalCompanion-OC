@@ -73,12 +73,13 @@ struct ContentView: View {
                     Image(systemName: "hand.point.up.left")
                 }
 
-                // 捏人间入口（实验中：自定义角色外观）
+                // 角色工坊入口（自定义角色外观）
                 Button {
                     openWindow(id: "avatarStudio")
                 } label: {
                     Image(systemName: "paintbrush.pointed")
                 }
+                .accessibilityLabel("角色工坊")
 
                 Button {
                     appModel.showAPIKeySetup = true
@@ -205,13 +206,22 @@ struct ContentView: View {
             guard ScreenshotDemoData.isEnabled, !didOpenScreenshotRoute else { return }
             didOpenScreenshotRoute = true
             switch ScreenshotDemoData.route {
-            case "immersive":
+            case "immersive", "gesture-guide", "movement":
                 hasSeenGestureGuide = true
                 showGestureGuide = false
                 try? await Task.sleep(for: .seconds(1))
                 appModel.immersiveSpaceState = .inTransition
                 if case .error = await openImmersiveSpace(id: appModel.immersiveSpaceID) {
                     appModel.immersiveSpaceState = .closed
+                }
+                if ScreenshotDemoData.route == "movement",
+                   appModel.immersiveSpaceState == .open {
+                    appModel.movementMode = .follow
+                }
+                if ScreenshotDemoData.route == "gesture-guide",
+                   appModel.immersiveSpaceState == .open {
+                    try? await Task.sleep(for: .seconds(2))
+                    showGestureGuide = true
                 }
             case "avatar-studio":
                 try? await Task.sleep(for: .seconds(1))
