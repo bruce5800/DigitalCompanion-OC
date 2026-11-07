@@ -49,9 +49,9 @@ def rounded_card(source: Image.Image, size: tuple[int, int], radius: int) -> Ima
     return fitted
 
 
-def draw_brand(draw: ImageDraw.ImageDraw, canvas: Image.Image, x: int, y: int, icon_size: int, text_color: tuple[int, int, int]):
+def draw_brand(draw: ImageDraw.ImageDraw, canvas: Image.Image, x: int, y: int, icon_size: int, text_color: tuple[int, int, int], name: str):
     canvas.alpha_composite(rounded_icon(icon_size), (x, y))
-    draw.text((x + icon_size + 24, y + icon_size // 2), "数字伙伴", font=font(round(icon_size * 0.38), True), fill=text_color, anchor="lm")
+    draw.text((x + icon_size + 24, y + icon_size // 2), name, font=font(round(icon_size * 0.38), True), fill=text_color, anchor="lm")
 
 
 def compose_phone(source_name: str, output_name: str, headline: str, subtitle: str):
@@ -59,7 +59,7 @@ def compose_phone(source_name: str, output_name: str, headline: str, subtitle: s
     canvas = vertical_gradient((width, height), (255, 246, 235), (247, 169, 170)).convert("RGBA")
     draw = ImageDraw.Draw(canvas)
     ink = (91, 49, 44)
-    draw_brand(draw, canvas, 88, 74, 92, ink)
+    draw_brand(draw, canvas, 88, 74, 92, ink, "炉边·随身")
     draw.multiline_text((88, 224), headline, font=font(78, True), fill=ink, spacing=12)
     draw.text((90, 424), subtitle, font=font(34), fill=(126, 79, 72))
 
@@ -91,7 +91,7 @@ def compose_vision(source_name: str, output_name: str, headline: str, subtitle: 
 
     draw = ImageDraw.Draw(canvas)
     ink = (91, 49, 44)
-    draw_brand(draw, canvas, 220, 190, 96, ink)
+    draw_brand(draw, canvas, 220, 190, 96, ink, "炉边")
     draw.multiline_text((220, 340), headline, font=font(86, True), fill=ink, spacing=12)
     draw.text((222, 565), subtitle, font=font(38), fill=(126, 79, 72))
     canvas.convert("RGB").save(VISION_DIR / output_name, quality=96)
@@ -112,7 +112,7 @@ def main():
         ("01-chat-clean.png", "01-spatial-chat.png", "让陪伴，\n出现在你的空间里", "聊天窗口自然融入熟悉的房间。"),
         ("02-immersive-oc-raw.png", "02-companion-oc.png", "她不只在屏幕里", "原创角色来到你面前，陪伴更有存在感。"),
         ("03-immersive-sg-raw.png", "03-companion-sg.png", "不同性格，\n都能来到你身边", "选择此刻最适合你的陪伴。"),
-        ("04-immersive-xo-raw.png", "04-companion-xo.png", "在熟悉的房间，\n自然地聊一会儿", "空间计算，让数字伙伴成为生活的一部分。"),
+        ("04-immersive-xo-raw.png", "04-companion-xo.png", "在熟悉的房间，\n自然地聊一会儿", "空间计算，让陪伴成为生活的一部分。"),
     ]
     for spec in vision_specs:
         compose_vision(*spec)
