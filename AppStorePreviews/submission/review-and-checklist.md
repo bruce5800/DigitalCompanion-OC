@@ -46,7 +46,7 @@
 | --- | --- | --- |
 | 必须 | 上传两个 Release 构建并检查 App 图标 | 工程已指定 `AppIcon`，iPhone 有 1024×1024 图标，visionOS 有分层图标；截图中的 App Store Connect 仍显示占位图标，可能因为构建尚未关联，需上传后核对。 |
 | 必须 | 构建显示名与后台名称一致 | 当前 Xcode 工程没有显式 `CFBundleDisplayName`；需在 Release 构建上确认主屏幕分别显示“炉边”和“炉边·随身”。 |
-| 必须 | 提供公开的支持网址、隐私政策网址和联系邮箱 | 目前只有本地草稿，不能把文件路径填入 App Store Connect；隐私政策还需 App 内可访问。 |
+| 必须 | 提供公开的支持网址、隐私政策网址和联系邮箱 | 页面已通过 GitHub Pages 发布：支持 `https://bruce5800.github.io/DigitalCompanion-OC/`；隐私 `https://bruce5800.github.io/DigitalCompanion-OC/privacy.html`；联系邮箱 `zhuolun66@gmail.com`。仍需填入 App Store Connect，并在 App 内提供隐私政策入口。 |
 | 必须 | App Privacy 问卷 | 核查 AI 服务商、Fish Audio、系统语音识别、iCloud 的数据流与各服务商政策；不要直接选择“不收集数据”。 |
 | 必须 | 审核功能可测 | 准备专用低额度 AI API Key，仅填 App Store Connect 审核备注；确认两端正常对话，Vision Pro 的语音/空间功能可测。 |
 | 必须 | 年龄分级、内容权利、定价和销售范围 | 按实际内容与商业模式填写；AI 生成内容的分级问题需如实回答，不能直接沿用其它 App 的“4+”。 |
@@ -58,7 +58,7 @@
 
 ## 需要你提供或确认的值
 
-- 运营者/版权主体、公开联系邮箱、支持和隐私政策的 HTTPS 发布位置。
+- 运营者/版权主体；联系邮箱及两个 HTTPS 网址已在上文列出，请确认沿用。
 - 免费还是付费、销售国家/地区、欧盟交易者状态。
 - 两款 App 是否只上简体中文；若还上其他本地化，需要另备文案和截图。
 - 用于审核的专用 AI API Key（**不要发在聊天或提交到仓库**，只在 App Store Connect 的审核备注中填写）。

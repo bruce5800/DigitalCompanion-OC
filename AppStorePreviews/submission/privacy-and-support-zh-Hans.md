@@ -1,6 +1,11 @@
 # 炉边系列：隐私政策与支持页草稿
 
-以下是供发布到公开 HTTPS 页面前审阅的草稿，**不是现成的网址**。请补全运营主体、联系邮箱、更新日期，并依据正式构建及所选第三方服务商条款复核；两款 App 可以共用同一政策网址，但必须清楚区分平台差异。App Store Connect 的隐私问卷要单独据实填写，不能仅凭本稿选择“不收集数据”。
+本文件保留上架前的内容草稿；实际公开页面已发布在 `docs/`。两款 App 可使用相同网址：
+
+- 技术支持：<https://bruce5800.github.io/DigitalCompanion-OC/>
+- 隐私政策：<https://bruce5800.github.io/DigitalCompanion-OC/privacy.html>
+
+公开页面使用已在另一个应用支持页公布的联系邮箱 `zhuolun66@gmail.com`。仍需依据正式构建及所选第三方服务商条款复核；App Store Connect 的隐私问卷要单独据实填写，不能仅凭本稿选择“不收集数据”。
 
 ## 隐私政策草稿
 
@@ -59,6 +64,6 @@
 
 ## 发布前必须处理
 
-1. 将隐私政策和支持页发布到无需登录即可打开的 HTTPS 地址，分别填写到两款 App 的 App Store Connect；在 App 内加入容易找到的隐私政策入口。Apple 要求在元数据和 App 内提供隐私政策链接：[App Review Guidelines 5.1.1](https://developer.apple.com/app-store/review/guidelines/)。
+1. 隐私政策和支持页已发布到无需登录即可打开的 HTTPS 地址；仍需分别填写到两款 App 的 App Store Connect，并在 App 内加入容易找到的隐私政策入口。Apple 要求在元数据和 App 内提供隐私政策链接：[App Review Guidelines 5.1.1](https://developer.apple.com/app-store/review/guidelines/)。
 2. 逐项核对第三方 AI 与 Fish Audio 的数据处理、保留及披露，并完成 App Privacy 问卷。Apple 明确要求涵盖第三方合作方的数据收集：[Manage App Privacy](https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy/)。
 3. 核实 API Key 是否可在 App 内删除，以及 iCloud 数据删除的实际效果，修订上文相关段落后再公开。不要带方括号占位符提交。
