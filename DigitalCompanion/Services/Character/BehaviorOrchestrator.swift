@@ -598,24 +598,9 @@ final class BehaviorOrchestrator {
         }
     }
 
-    /// 给 AutonomousDecisionService 用的 LLM 实例；逻辑复制自 ChatService.createLLMService
+    /// 给 AutonomousDecisionService 用的 LLM 实例，统一由共享工厂配置。
     private func makeLLMService() throws -> any LLMService {
-        let provider = appModel.selectedProvider
-        guard let apiKey = KeychainService.load(forAccount: provider.keychainAccount) else {
-            throw LLMError.noAPIKey
-        }
-        switch provider {
-        case .claude:
-            return ClaudeAPIService(apiKey: apiKey)
-        case .openAI:
-            return OpenAIAPIService(apiKey: apiKey)
-        case .deepSeek:
-            return OpenAIAPIService(
-                apiKey: apiKey,
-                baseURL: "https://api.deepseek.com/chat/completions",
-                model: "deepseek-v4-flash"
-            )
-        }
+        try LLMServiceFactory.make(provider: appModel.selectedProvider)
     }
 
     // MARK: - Autonomous 辅助
