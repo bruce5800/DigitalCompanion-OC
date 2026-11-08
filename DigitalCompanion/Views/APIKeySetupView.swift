@@ -104,6 +104,11 @@ struct APIKeySetupView: View {
                     .frame(maxWidth: .infinity)
                     .disabled(!canSave)
                 }
+
+                Section("关于") {
+                    Link("隐私政策", destination: URL(string: "https://bruce5800.github.io/DigitalCompanion-OC/privacy.html")!)
+                    Link("帮助与支持", destination: URL(string: "https://bruce5800.github.io/DigitalCompanion-OC/")!)
+                }
             }
             .navigationTitle("API 设置")
             .toolbar {

@@ -110,6 +110,8 @@ struct SettingsScreen: View {
                         Text(LocalizedStringKey(appModel.currentPersonaName))
                     }
                     LabeledContent("消息数", value: "\(appModel.chatService.messages.count)")
+                    Link("隐私政策", destination: URL(string: "https://bruce5800.github.io/DigitalCompanion-OC/privacy.html")!)
+                    Link("帮助与支持", destination: URL(string: "https://bruce5800.github.io/DigitalCompanion-OC/")!)
                 }
             }
             .navigationTitle("设置")

@@ -75,7 +75,15 @@ def compose_phone(source_name: str, output_name: str, headline: str, subtitle: s
     shadow = shadow.filter(ImageFilter.GaussianBlur(28))
     canvas.alpha_composite(shadow)
     canvas.alpha_composite(rounded_card(source, card_size, 68), (x, y))
-    canvas.convert("RGB").save(directory / output_name, quality=96)
+    finished = canvas.convert("RGB")
+    finished.save(directory / output_name, quality=96)
+
+    # App Store Connect's current default iPhone slot is the 6.3-inch display.
+    medium_dir = directory.parent / "iPhone-6.3"
+    medium_dir.mkdir(parents=True, exist_ok=True)
+    finished.resize((1206, 2622), Image.Resampling.LANCZOS).save(
+        medium_dir / output_name, quality=96
+    )
 
 
 def compose_vision(source_name: str, output_name: str, headline: str, subtitle: str,

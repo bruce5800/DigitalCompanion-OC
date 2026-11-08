@@ -5,7 +5,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSWorldSensingUsageDescription</key>
-	<string>用于追踪您的位置，让角色的目光跟随您</string>
+	<string>用于识别周围空间中的平面与座位，让虚拟角色在房间中定位和互动</string>
 	<key>NSHandsTrackingUsageDescription</key>
 	<string>用于识别手势，让角色回应您的动作</string>
 	<key>NSMicrophoneUsageDescription</key>
