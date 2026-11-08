@@ -60,9 +60,9 @@ struct GestureGuideView: View {
                         .foregroundStyle(.tint)
                         .frame(width: 34, alignment: .center)
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(item.title)
+                        Text(LocalizedStringKey(item.title))
                             .font(.headline)
-                        Text(item.detail)
+                        Text(LocalizedStringKey(item.detail))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)

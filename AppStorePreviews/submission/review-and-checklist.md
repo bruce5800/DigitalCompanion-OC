@@ -41,8 +41,10 @@
 | 炉边 | `../zh-Hans/VisionPro/06-character-workshop.png` | 3840×2160 |
 | 炉边 | `../zh-Hans/VisionPro/07-movement-modes.png` | 3840×2160 |
 
-以上是简体中文本地化素材，上传最终合成图，不上传 `*-raw.png`。App Store Connect 每个设备尺寸可上传 1–10 张；按实际页面提示选择槽位。尺寸标准：[Apple Screenshot Specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications)。
-手势图展示的是模拟器中的操作引导页，不是模拟器成功识别手势的画面；手势识别须在 Vision Pro 真机验证。移动模式图展示“跟随”已选中的界面，动态跟随效果同样须在真机确认。
+以上是简体中文本地化素材。英文版也已生成 `../en/iPhone/01-listens.png` 至 `05-remembers.png`（5 张）和 `../en/VisionPro/01-spatial-chat.png` 至 `07-movement-modes.png`（7 张）。英文角色工坊使用手动取景的 `../en/VisionPro/06-avatar-studio-raw.jpeg`。上传最终合成图，不上传 `*-raw.png` 或 `*-raw.jpeg`。App Store Connect 每个设备尺寸可上传 1–10 张；按实际页面提示选择槽位。尺寸标准：[Apple Screenshot Specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications)。
+手势图展示的是模拟器中的操作引导页和预置挥手动画，不是模拟器成功识别手势的画面；手势识别须在 Vision Pro 真机验证。移动模式图展示“自主”已选中及预置坐姿动画；模拟器不支持真实空间平面检测，自动寻座与移动效果须在 Vision Pro 真机确认。
+
+中英文角色工坊图均使用手动调整取景的模拟器截图，人物脚部和地面关系已由开发者复核。两张原图右下角仍有模拟器操作控件；英文图的页签文字也有截断，正式上传前建议换成隐藏控件、使用最新英文 UI 构建的截图。
 
 ## 上架前待办
 
@@ -64,5 +66,5 @@
 
 - 运营者/版权主体；联系邮箱及两个 HTTPS 网址已在上文列出，请确认沿用。
 - 免费还是付费、销售国家/地区、欧盟交易者状态。
-- 两款 App 是否只上简体中文；若还上其他本地化，需要另备文案和截图。
+- 两款 App 现支持界面中英切换；如果 App Store Connect 同时启用英文商店本地化，还需填写英文商店文案。
 - 用于审核的专用 AI API Key（**不要发在聊天或提交到仓库**，只在 App Store Connect 的审核备注中填写）。

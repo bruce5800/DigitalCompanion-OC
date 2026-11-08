@@ -19,6 +19,7 @@ struct MemoryInspectorScreen: View {
 
     @Environment(PhoneAppModel.self) private var appModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.locale) private var locale
 
     @State private var snapshots: [ChatSnapshot] = []
     @State private var isLoading = true
@@ -92,7 +93,9 @@ struct MemoryInspectorScreen: View {
                 }
                 Button("取消", role: .cancel) { }
             } message: {
-                Text("会删除 \(snapshots.count) 个角色的全部对话历史，此操作无法撤销。")
+                Text(isEnglish
+                     ? "This permanently deletes history for \(snapshots.count) companions on this device."
+                     : "会删除 \(snapshots.count) 个角色的全部对话历史，此操作无法撤销。")
             }
         }
     }
@@ -115,10 +118,10 @@ struct MemoryInspectorScreen: View {
             }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(displayName(for: snapshot.personaID))
+                Text(LocalizedStringKey(displayName(for: snapshot.personaID)))
                     .font(.body)
                 HStack(spacing: 6) {
-                    Text("\(snapshot.messages.count) 条")
+                    Text(isEnglish ? "\(snapshot.messages.count) messages" : "\(snapshot.messages.count) 条")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text("·")
@@ -141,6 +144,8 @@ struct MemoryInspectorScreen: View {
         case .local:  return "本地"
         }
     }
+
+    private var isEnglish: Bool { locale.language.languageCode?.identifier == "en" }
 
     private func displayName(for personaID: String) -> String {
         CharacterPersona.load(named: personaID)?.name ?? personaID

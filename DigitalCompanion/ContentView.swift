@@ -14,6 +14,7 @@ struct ContentView: View {
 
     @Environment(AppModel.self) private var appModel
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
 
     @State private var showUserPersonaEdit = false
@@ -36,7 +37,7 @@ struct ContentView: View {
                         } label: {
                             let isCurrent = appModel.currentPersona?.id == pid
                             Label(
-                                CharacterPersona.load(named: pid)?.name ?? pid,
+                                LocalizedStringKey(CharacterPersona.load(named: pid)?.name ?? pid),
                                 systemImage: isCurrent ? "checkmark.circle.fill" : "person.circle"
                             )
                         }
@@ -45,7 +46,7 @@ struct ContentView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
-                        Text(appModel.currentPersona?.name ?? "数字伙伴")
+                        Text(LocalizedStringKey(appModel.currentPersona?.name ?? "数字伙伴"))
                             .font(.title2)
                             .fontWeight(.bold)
                     }
@@ -119,9 +120,13 @@ struct ContentView: View {
             // 底部状态栏
             HStack(spacing: 12) {
                 if appModel.immersiveSpaceState == .open {
-                    Text("动画: \(appModel.selectedAnimationDisplayName)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    #if DEBUG
+                    if !ScreenshotDemoData.isEnabled {
+                        animationStatus
+                    }
+                    #else
+                    animationStatus
+                    #endif
                 }
 
                 Spacer()
@@ -130,12 +135,9 @@ struct ContentView: View {
                 // 只在 immersive 打开时可用——关闭时切换没意义，follow 依赖头部追踪
                 if appModel.immersiveSpaceState == .open {
                     HStack(spacing: 6) {
-                        Text("站位")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
                         Picker("站位", selection: $appModel.movementMode) {
                             ForEach(MovementMode.allCases) { mode in
-                                Text(mode.displayName).tag(mode)
+                                Text(LocalizedStringKey(mode.displayName)).tag(mode)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -169,10 +171,21 @@ struct ContentView: View {
             .padding(.horizontal)
             .padding(.vertical, 6)
         }
+        #if DEBUG
+        .opacity(ScreenshotDemoData.isEnabled && ScreenshotDemoData.route == "avatar-studio" ? 0 : 1)
+        #endif
         .toolbar {
+            #if DEBUG
+            if !(ScreenshotDemoData.isEnabled && ScreenshotDemoData.route == "avatar-studio") {
+                ToolbarItemGroup(placement: .bottomOrnament) {
+                    ToggleImmersiveSpaceButton()
+                }
+            }
+            #else
             ToolbarItemGroup(placement: .bottomOrnament) {
                 ToggleImmersiveSpaceButton()
             }
+            #endif
         }
         .sheet(isPresented: $appModel.showAPIKeySetup) {
             APIKeySetupView()
@@ -207,6 +220,7 @@ struct ContentView: View {
             didOpenScreenshotRoute = true
             switch ScreenshotDemoData.route {
             case "immersive", "gesture-guide", "movement":
+                dismissWindow(id: "avatarStudio")
                 hasSeenGestureGuide = true
                 showGestureGuide = false
                 try? await Task.sleep(for: .seconds(1))
@@ -216,10 +230,12 @@ struct ContentView: View {
                 }
                 if ScreenshotDemoData.route == "movement",
                    appModel.immersiveSpaceState == .open {
-                    appModel.movementMode = .follow
+                    appModel.movementMode = .autonomous
+                    appModel.selectedAnimation = "sg_sitting_idle"
                 }
                 if ScreenshotDemoData.route == "gesture-guide",
                    appModel.immersiveSpaceState == .open {
+                    appModel.selectedAnimation = "oc_waving"
                     try? await Task.sleep(for: .seconds(2))
                     showGestureGuide = true
                 }
@@ -239,6 +255,15 @@ struct ContentView: View {
         #else
         return true
         #endif
+    }
+
+    private var animationStatus: some View {
+        HStack(spacing: 0) {
+            Text("动画: ")
+            Text(LocalizedStringKey(appModel.selectedAnimationDisplayName))
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
     }
 }
 

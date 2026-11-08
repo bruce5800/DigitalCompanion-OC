@@ -24,6 +24,7 @@ struct PersonaMemoryDetailScreen: View {
 
     @Environment(PhoneAppModel.self) private var appModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.locale) private var locale
 
     @State private var confirmDelete = false
 
@@ -43,10 +44,10 @@ struct PersonaMemoryDetailScreen: View {
                         size: 52
                     )
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(personaName)
+                        Text(LocalizedStringKey(personaName))
                             .font(.title3.bold())
                         HStack(spacing: 6) {
-                            Text("\(snapshot.messages.count) 条")
+                            Text(isEnglish ? "\(snapshot.messages.count) messages" : "\(snapshot.messages.count) 条")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             Text("·").foregroundStyle(.tertiary)
@@ -102,10 +103,10 @@ struct PersonaMemoryDetailScreen: View {
                 Text(deleteFooterText)
             }
         }
-        .navigationTitle(personaName)
+        .navigationTitle(Text(LocalizedStringKey(personaName)))
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
-            "删除 \(personaName) 的记录？",
+            isEnglish ? "Delete \(personaName)'s history?" : "删除 \(personaName) 的记录？",
             isPresented: $confirmDelete,
             titleVisibility: .visible
         ) {
@@ -117,7 +118,9 @@ struct PersonaMemoryDetailScreen: View {
             }
             Button("取消", role: .cancel) { }
         } message: {
-            Text("会删除 \(snapshot.messages.count) 条对话历史和记忆摘要。\(isCurrentPersona ? "当前正在聊，删除后会重新发开场白。" : "")")
+            Text(isEnglish
+                 ? "This deletes \(snapshot.messages.count) messages and their memory summary. \(isCurrentPersona ? "The current chat will restart." : "")"
+                 : "会删除 \(snapshot.messages.count) 条对话历史和记忆摘要。\(isCurrentPersona ? "当前正在聊，删除后会重新发开场白。" : "")")
         }
         .task { await loadMemory() }
         .sheet(item: $editingFact) { fact in
@@ -165,7 +168,7 @@ struct PersonaMemoryDetailScreen: View {
 
     @ViewBuilder
     private func factCategoryHeader(_ category: UserFact.Category) -> some View {
-        Text(category.displayName)
+        Text(LocalizedStringKey(category.displayName))
             .font(.caption.bold())
             .foregroundStyle(.secondary)
             .listRowSeparator(.hidden)
@@ -249,13 +252,13 @@ struct PersonaMemoryDetailScreen: View {
     private func episodeDateLabel(_ date: Date) -> String {
         let calendar = Calendar.current
         let df = DateFormatter()
-        df.locale = Locale(identifier: "zh_Hans_CN")
-        if calendar.isDateInToday(date) { return "今天" }
-        if calendar.isDateInYesterday(date) { return "昨天" }
+        df.locale = locale
+        if calendar.isDateInToday(date) { return isEnglish ? "Today" : "今天" }
+        if calendar.isDateInYesterday(date) { return isEnglish ? "Yesterday" : "昨天" }
         if calendar.component(.year, from: date) == calendar.component(.year, from: Date()) {
-            df.dateFormat = "M月d日"
+            df.dateFormat = isEnglish ? "MMM d" : "M月d日"
         } else {
-            df.dateFormat = "yyyy年M月d日"
+            df.dateFormat = isEnglish ? "MMM d, yyyy" : "yyyy年M月d日"
         }
         return df.string(from: date)
     }
@@ -286,7 +289,9 @@ struct PersonaMemoryDetailScreen: View {
         } header: {
             Text("Debug")
         } footer: {
-            Text("不等阈值，立即用最近 \(appModel.chatService.reflectionChunkSize) 条消息跑一次反思。完成后下方记忆会刷新。")
+            Text(isEnglish
+                 ? "Reflect now using the last \(appModel.chatService.reflectionChunkSize) messages. Memory below will refresh afterward."
+                 : "不等阈值，立即用最近 \(appModel.chatService.reflectionChunkSize) 条消息跑一次反思。完成后下方记忆会刷新。")
         }
     }
 
@@ -309,7 +314,7 @@ struct PersonaMemoryDetailScreen: View {
                     }
                     ProgressView(value: Double(bond.affection), total: 100)
                         .tint(.pink)
-                    Text(bond.affectionLevelLabel)
+                    Text(LocalizedStringKey(bond.affectionLevelLabel))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -330,7 +335,9 @@ struct PersonaMemoryDetailScreen: View {
                         Label(commitment.description, systemImage: "checkmark.circle")
                             .font(.callout)
                         HStack(spacing: 8) {
-                            Text("承诺于 \(commitmentDateLabel(commitment.createdAt))")
+                            Text(isEnglish
+                                 ? "Promised on \(commitmentDateLabel(commitment.createdAt))"
+                                 : "承诺于 \(commitmentDateLabel(commitment.createdAt))")
                             // A4：dueAt 存在就显示触发时间状态
                             if let dueAt = commitment.dueAt {
                                 Text("·").foregroundStyle(.tertiary)
@@ -364,8 +371,8 @@ struct PersonaMemoryDetailScreen: View {
 
     private func commitmentDateLabel(_ date: Date) -> String {
         let df = DateFormatter()
-        df.locale = Locale(identifier: "zh_Hans_CN")
-        df.dateFormat = "M月d日 HH:mm"
+        df.locale = locale
+        df.dateFormat = isEnglish ? "MMM d, HH:mm" : "M月d日 HH:mm"
         return df.string(from: date)
     }
 
@@ -374,15 +381,17 @@ struct PersonaMemoryDetailScreen: View {
         let interval = dueAt.timeIntervalSince(Date())
         let absMin = Int(abs(interval) / 60)
         if interval <= 0 {
-            return "已到期（待心跳触发）"
+            return isEnglish ? "Due now" : "已到期（待心跳触发）"
         }
         if absMin < 1 {
-            return "即将触发"
+            return isEnglish ? "Due soon" : "即将触发"
         }
         if absMin < 60 {
-            return "\(absMin) 分钟后触发"
+            return isEnglish ? "Due in \(absMin) min" : "\(absMin) 分钟后触发"
         }
-        return "\(absMin / 60) 小时 \(absMin % 60) 分后触发"
+        return isEnglish
+            ? "Due in \(absMin / 60) hr \(absMin % 60) min"
+            : "\(absMin / 60) 小时 \(absMin % 60) 分后触发"
     }
 
     // MARK: - Memory 加载 / 触发反思
@@ -490,8 +499,8 @@ struct PersonaMemoryDetailScreen: View {
 
     private func timeString(_ date: Date) -> String {
         let df = DateFormatter()
-        df.locale = Locale(identifier: "zh_Hans_CN")
-        df.dateFormat = "MM-dd HH:mm"
+        df.locale = locale
+        df.dateFormat = isEnglish ? "MMM d, HH:mm" : "MM-dd HH:mm"
         return df.string(from: date)
     }
 
@@ -501,12 +510,19 @@ struct PersonaMemoryDetailScreen: View {
         CharacterPersona.load(named: snapshot.personaID)?.name ?? snapshot.personaID
     }
 
+    private var isEnglish: Bool { locale.identifier.hasPrefix("en") }
+
     private var isCurrentPersona: Bool {
         appModel.currentPersona?.id == snapshot.personaID
     }
 
     private var deleteFooterText: String {
-        isCurrentPersona
+        if isEnglish {
+            return isCurrentPersona
+                ? "This is your current companion. Deleting its history will restart the chat."
+                : "Other companions and the current chat are unaffected."
+        }
+        return isCurrentPersona
             ? "这是你当前正在聊的角色，删除后会自动重启对话（发新开场白）。"
             : "不影响其它角色，也不影响当前对话。"
     }

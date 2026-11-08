@@ -21,14 +21,14 @@ struct PersonaMenu: View {
                     let isCurrent = appModel.currentPersona?.id == pid
                     let name = CharacterPersona.load(named: pid)?.name ?? pid
                     Label(
-                        name,
+                        LocalizedStringKey(name),
                         systemImage: isCurrent ? "checkmark.circle.fill" : "person.circle"
                     )
                 }
             }
         } label: {
             HStack(spacing: 4) {
-                Text(appModel.currentPersonaName)
+                Text(LocalizedStringKey(appModel.currentPersonaName))
                     .font(.headline)
                     .foregroundStyle(.primary)
                 Image(systemName: "chevron.down")

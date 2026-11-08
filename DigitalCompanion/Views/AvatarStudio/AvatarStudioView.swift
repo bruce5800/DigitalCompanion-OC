@@ -175,7 +175,7 @@ struct AvatarStudioView: View {
         // 页签
         Picker("", selection: $page) {
             ForEach(StudioPage.allCases) { p in
-                Label(p.rawValue, systemImage: p.icon).tag(p)
+                Text(LocalizedStringKey(p.rawValue)).tag(p)
             }
         }
         .pickerStyle(.segmented)
@@ -233,7 +233,7 @@ struct AvatarStudioView: View {
                                 Text("生成中…")
                             } else {
                                 Image(systemName: "wand.and.stars")
-                                Text(model.generatedCard == nil ? "AI 完善人设" : "重新生成")
+                                Text(LocalizedStringKey(model.generatedCard == nil ? "AI 完善人设" : "重新生成"))
                             }
                         }
                         .font(.footnote)
@@ -294,7 +294,7 @@ struct AvatarStudioView: View {
                         set: { newBase in Task { await model.switchBase(newBase) } }
                     )) {
                         ForEach(AvatarBase.allCases) { base in
-                            Text(base.displayName).tag(base)
+                            Text(LocalizedStringKey(base.displayName)).tag(base)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -316,7 +316,7 @@ struct AvatarStudioView: View {
                 }
                 ForEach(manifest.morphs, id: \.self) { morph in
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(AvatarStudioModel.morphLabels[morph] ?? morph)
+                        Text(LocalizedStringKey(AvatarStudioModel.morphLabels[morph] ?? morph))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Slider(
@@ -342,7 +342,7 @@ struct AvatarStudioView: View {
                             Button {
                                 model.previewApplePreset(choice.id)
                             } label: {
-                                Text(choice.name)
+                                Text(LocalizedStringKey(choice.name))
                                     .font(.footnote)
                                     .lineLimit(1)
                                     .fixedSize()
@@ -373,7 +373,7 @@ struct AvatarStudioView: View {
                                     Button {
                                         model.fishVoiceID = isSelected ? "" : v.id
                                     } label: {
-                                        Text(v.name)
+                                        Text(LocalizedStringKey(v.name))
                                             .font(.footnote)
                                             .lineLimit(1)
                                             .padding(.horizontal, 8)
@@ -415,7 +415,7 @@ struct AvatarStudioView: View {
                             Button {
                                 model.previewApplePreset(choice.id)
                             } label: {
-                                Text(choice.name)
+                                Text(LocalizedStringKey(choice.name))
                                     .font(.footnote)
                                     .lineLimit(1)
                                     .fixedSize()
@@ -446,7 +446,7 @@ struct AvatarStudioView: View {
                                     Button {
                                         model.fishVoiceID = isSelected ? "" : v.id
                                     } label: {
-                                        Text(v.name)
+                                        Text(LocalizedStringKey(v.name))
                                             .font(.footnote)
                                             .lineLimit(1)
                                             .padding(.horizontal, 8)
@@ -489,7 +489,7 @@ struct AvatarStudioView: View {
                                     .overlay(Circle().strokeBorder(.white.opacity(0.4)))
                             }
                             .buttonStyle(.plain)
-                            .help(name)
+                            .help(LocalizedStringKey(name))
                         }
                         ColorPicker("", selection: $pickedColor, supportsOpacity: false)
                             .labelsHidden()
@@ -506,7 +506,7 @@ struct AvatarStudioView: View {
     }
 
     private func sectionTitle(_ title: String, icon: String) -> some View {
-        Label(title, systemImage: icon)
+        Label(LocalizedStringKey(title), systemImage: icon)
             .font(.subheadline)
             .fontWeight(.semibold)
     }
@@ -526,7 +526,7 @@ struct AvatarStudioView: View {
                             model.selectPart(group.id)
                         } label: {
                             // 短名(分区标题已标类别),字号收一档,不再截断成"…"
-                            Text(AvatarStudioModel.partShortLabel(group.id))
+                            Text(LocalizedStringKey(AvatarStudioModel.partShortLabel(group.id)))
                                 .font(.footnote)
                                 .lineLimit(1)
                                 .fixedSize()

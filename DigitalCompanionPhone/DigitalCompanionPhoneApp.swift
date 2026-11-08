@@ -15,11 +15,22 @@ import SwiftUI
 struct DigitalCompanionPhoneApp: App {
     /// app 生命周期内唯一的状态实例
     @State private var appModel = PhoneAppModel()
+    @AppStorage("uiLanguage") private var uiLanguage = "system"
+
+    private var displayLocale: Locale {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--screenshot-language=en") {
+            return Locale(identifier: "en")
+        }
+        #endif
+        return uiLanguage == "system" ? .current : Locale(identifier: uiLanguage)
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(appModel)
+                .environment(\.locale, displayLocale)
         }
     }
 }

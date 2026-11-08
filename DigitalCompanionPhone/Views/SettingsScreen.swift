@@ -12,6 +12,8 @@ struct SettingsScreen: View {
 
     @Environment(PhoneAppModel.self) private var appModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.locale) private var locale
+    @AppStorage("uiLanguage") private var uiLanguage = "system"
 
     @State private var showUserPersona = false
     @State private var showAPIKeys = false
@@ -23,6 +25,13 @@ struct SettingsScreen: View {
 
         NavigationStack {
             Form {
+                Section("语言") {
+                    Picker("应用语言", selection: $uiLanguage) {
+                        Text("跟随系统").tag("system")
+                        Text("简体中文").tag("zh-Hans")
+                        Text("English").tag("en")
+                    }
+                }
                 Section("LLM 服务商") {
                     Picker("当前服务商", selection: $appModel.selectedProvider) {
                         ForEach(LLMProvider.allCases) { provider in
@@ -89,15 +98,17 @@ struct SettingsScreen: View {
 
                 Section {
                     LabeledContent("存储后端") {
-                        Text(storageBackendLabel)
+                        Text(LocalizedStringKey(storageBackendLabel))
                             .foregroundStyle(.secondary)
                     }
                 } footer: {
-                    Text(storageFooter)
+                    Text(LocalizedStringKey(storageFooter))
                 }
 
                 Section("关于") {
-                    LabeledContent("当前角色", value: appModel.currentPersonaName)
+                    LabeledContent("当前角色") {
+                        Text(LocalizedStringKey(appModel.currentPersonaName))
+                    }
                     LabeledContent("消息数", value: "\(appModel.chatService.messages.count)")
                 }
             }
@@ -128,7 +139,9 @@ struct SettingsScreen: View {
                 }
                 Button("取消", role: .cancel) { }
             } message: {
-                Text("会删除\(appModel.currentPersonaName)的对话记录，并重新发送开场白。其它角色的记录不受影响。")
+                Text(locale.language.languageCode?.identifier == "en"
+                     ? "This deletes \(appModel.currentPersonaName)'s chat and starts it again. Other companions are unaffected."
+                     : "会删除\(appModel.currentPersonaName)的对话记录，并重新发送开场白。其它角色的记录不受影响。")
             }
         }
     }

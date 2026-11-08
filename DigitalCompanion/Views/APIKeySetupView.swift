@@ -13,6 +13,7 @@ struct APIKeySetupView: View {
 
     @Environment(AppModel.self) private var appModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("uiLanguage") private var uiLanguage = "system"
 
     @State private var claudeKey: String = ""
     @State private var openAIKey: String = ""
@@ -25,6 +26,13 @@ struct APIKeySetupView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("语言") {
+                    Picker("应用语言", selection: $uiLanguage) {
+                        Text("跟随系统").tag("system")
+                        Text("简体中文").tag("zh-Hans")
+                        Text("English").tag("en")
+                    }
+                }
                 // MARK: - LLM 设置
                 Section("LLM 服务选择") {
                     Picker("默认服务", selection: $selectedProvider) {

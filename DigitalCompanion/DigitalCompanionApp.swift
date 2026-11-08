@@ -11,11 +11,22 @@ import SwiftUI
 struct DigitalCompanionApp: App {
 
     @State private var appModel = AppModel()
+    @AppStorage("uiLanguage") private var uiLanguage = "system"
+
+    private var displayLocale: Locale {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--screenshot-language=en") {
+            return Locale(identifier: "en")
+        }
+        #endif
+        return uiLanguage == "system" ? .current : Locale(identifier: uiLanguage)
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(appModel)
+                .environment(\.locale, displayLocale)
         }
         // 主窗口是纯 2D UI（聊天 + 设置），用 plain 避免 volumetric 跟头移动导致 sheet 抖动
         .windowStyle(.plain)
@@ -25,6 +36,7 @@ struct DigitalCompanionApp: App {
         WindowGroup(id: "avatarStudio") {
             AvatarStudioView()
                 .environment(appModel)
+                .environment(\.locale, displayLocale)
         }
         .windowStyle(.volumetric)
         .defaultSize(width: 1.1, height: 1.5, depth: 0.9, in: .meters)
@@ -32,6 +44,7 @@ struct DigitalCompanionApp: App {
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()
                 .environment(appModel)
+                .environment(\.locale, displayLocale)
                 .onAppear {
                     appModel.immersiveSpaceState = .open
                     appModel.onImmersiveSpaceOpened()
